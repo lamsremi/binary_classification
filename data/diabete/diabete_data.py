@@ -1,15 +1,32 @@
 """
-script to process the kagle titanic data.
+script to process the diabete dataset.
+
+https://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.names
+
+For Each Attribute: (all numeric-valued)
+   1. Number of times pregnant
+   2. Plasma glucose concentration a 2 hours in an oral glucose tolerance test
+   3. Diastolic blood pressure (mm Hg)
+   4. Triceps skin fold thickness (mm)
+   5. 2-Hour serum insulin (mu U/ml)
+   6. Body mass index (weight in kg/(height in m)^2)
+   7. Diabetes pedigree function
+   8. Age (years)
+   9. Class variable (0 or 1)
+
+768 rows after removing wrong lines
+
 """
 import pickle
 import math
-import pandas as pd
+
 import numpy as np
+import pandas as pd
 
 import tools
 
-pd.set_option('display.width', 800)
 
+pd.set_option('display.width', 800)
 
 # @tools.debug
 def process_data(path_csv, path_pickle):
@@ -30,14 +47,12 @@ def load_raw_data(path_csv):
     """Load raw data."""
     data_df = pd.read_csv(
         path_csv,
-        nrows=10000)
-    data_df = data_df[[
-        "Pclass",
-        "Fare",
-        "Age",
-        "SibSp",
-        "Parch",
-        "Survived"]]
+        # nrows=10,
+        names=[
+            "pregnancy_time", "glucose_concentration",
+            "blood_pressure", "skin_thickness",
+            "insulin_serum", "body_mass",
+            "diabete_pedigree", "age", "class"])
     return data_df
 
 
@@ -74,4 +89,4 @@ def store_data(data_array, path_pickle):
 
 
 if __name__ == '__main__':
-    process_data(path_csv="train.csv", path_pickle="data_array.pkl")
+    process_data(path_csv="diabetes_data.txt", path_pickle="data_array.pkl")

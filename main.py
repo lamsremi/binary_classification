@@ -7,21 +7,24 @@ import tools
 
 
 @tools.debug
-def predict(model_type, x_array):
+def predict(x_array, model_string, model=None):
     """Main function."""
-    # Load the model
-    loaded_model = load_model(model_type=model_type)
+    if model is None:
+        # Load the model
+        model = load_model(model_string=model_string)
     # Predict
-    y_array = loaded_model.predict(x_array)
+    y_array = model.predict(x_array)
     return y_array
 
 
-def load_model(model_type):
+def load_model(model_string):
     """Load a particular model."""
-    path_pickle = "model/{}/trained_model.pkl".format(model_type)
-    loaded_model = pickle.loads(path_pickle)
+    if model_string == "scikit_learn":
+        path_sav = "model/{}/trained_model.sav".format(model_string)
+        loaded_model = pickle.load(open(path_sav, 'rb'))
     return loaded_model
 
 
-if __name__ == '__main__':
-    predict()
+# if __name__ == '__main__':
+#     MODEL_STRING = "scikit_learn"
+#     predict(MODEL_STRING)

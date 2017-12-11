@@ -53,9 +53,9 @@ class ScikitLogisticReg():
         self.model.fit(x_array, y_array)
         return self.model
 
-    def persist(self, path_pickle):
+    def persist(self, path_sav):
         """Save the model."""
-        pickle.dump(self.model, open(path_pickle, "wb"))
+        pickle.dump(self.model, open(path_sav, "wb"))
 
 
     def predict(self, x_array):

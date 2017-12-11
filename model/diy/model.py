@@ -17,3 +17,7 @@ class DiyLogisticReg():
     def persist(self, path_pickle):
         """Save the model."""
         print("Persistence of the diy model to be coded")
+
+
+    def predict(self, x_array):
+        """Perform a one record prediction."""
