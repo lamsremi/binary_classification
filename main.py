@@ -3,10 +3,11 @@ script to use the logistic regression model
 """
 import pickle
 
+from model.diy.model import DiyLogisticReg
 import tools
 
 
-@tools.debug
+# @tools.debug
 def predict(x_array, model_string, model=None):
     """Main function."""
     if model is None:
@@ -14,7 +15,7 @@ def predict(x_array, model_string, model=None):
         model = load_model(model_string=model_string)
     # Predict
     y_array = model.predict(x_array)
-    return y_array
+    return y_array, model
 
 
 def load_model(model_string):
@@ -22,6 +23,8 @@ def load_model(model_string):
     if model_string == "scikit_learn":
         path_sav = "model/{}/trained_model.sav".format(model_string)
         loaded_model = pickle.load(open(path_sav, 'rb'))
+    if model_string == "diy":
+        loaded_model = DiyLogisticReg()
     return loaded_model
 
 
