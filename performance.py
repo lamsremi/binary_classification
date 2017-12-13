@@ -18,9 +18,10 @@ def test(model_string):
     y_prediction, model = predict(x_test, model_string)
     # Quantitative performance
     # performance = evaluate(y_test, y_prediction)
-    # Cost function
-    cost = model.cost_function(np.array(y_test), x_test)
-    print(cost)
+    # Cost function test
+    # cost = model.cost_function(np.array(y_test), x_test)
+    # fit Cost function test
+    model.fit(np.array(y_test), np.array(x_test))
     # Qualitative performance [Graphical]
     # display_results(x_test, y_test, y_prediction)
 
