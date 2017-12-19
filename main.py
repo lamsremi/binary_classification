@@ -4,7 +4,7 @@ script to use the logistic regression model
 import pickle
 
 from model.diy.model import DiyLogisticReg
-import tools
+# import tools
 
 
 # @tools.debug

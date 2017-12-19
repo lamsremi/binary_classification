@@ -12,13 +12,15 @@ def train(model_type, path_pickle):
     # Load the data
     x_array, y_array = utils.load_data(path_pickle)
     # Filter data
-    x_array, y_array = utils.filter_array(x_array, y_array, 0, 500)
+    x_array, y_array = utils.filter_array(x_array, y_array, 0, 600)
+    # Normalize data
+    x_array = utils.normalize(x_array)
     # Init the model
     model_instance = init_model(model_type=model_type)
     # Train the model
     trained_model = fit(model_instance, x_array, y_array)
-    # Persist the model
-    persist_model(trained_model, path_pickle="model/{}/trained_model.sav".format(model_type))
+    # # Persist the model
+    # persist_model(trained_model, path_pickle="model/{}/trained_model.sav".format(model_type))
 
 
 def init_model(model_type):
@@ -44,5 +46,5 @@ def persist_model(trained_model, path_pickle):
 
 if __name__ == '__main__':
     PATH_PICKLE = "data/diabete/data_array.pkl"
-    MODEL_TYPE = "scikit_learn"
+    MODEL_TYPE = "diy"
     train(MODEL_TYPE, PATH_PICKLE)
