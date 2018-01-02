@@ -125,11 +125,6 @@ class DiyLogisticReg():
 
             # print("----------> result derivative vector : {}".format(derivative_vector))
 
-        # print("m value : {}".format(m_value))
-        # print("x_array shape : {}".format(x_array.shape))
-        # print("y_array shape : {}".format(y_array.shape))
-
-
         derivative_vector = np.array(
             [
                 -1/m_value*(

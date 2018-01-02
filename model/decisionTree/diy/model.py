@@ -6,6 +6,7 @@ Decision tree features:
 - Categorical or categorical/numerical but always binary
 """
 
+import tools
 
 class DiyDecisionTree():
     """
@@ -45,14 +46,15 @@ class DiyDecisionTree():
             }
         }
         """
+        self.model = self.init_model()
 
 
-    def init_model():
+    def init_model(self):
         """Inits the model weights."""
-        self.model = {
+        model = {
             "salary": {
                 "type": "numerical",
-                "condition_value": "1000",
+                "condition_value": 1000,
                 "class_positive":{
                     "label": 1
                 },
@@ -63,7 +65,7 @@ class DiyDecisionTree():
                         "class_positive": {
                             "free": {
                                 "type": "categorical",
-                                "condition_value": true
+                                "condition_value": True,
                                 "class_positive": {
                                     "label": 0
                                 },
@@ -79,35 +81,54 @@ class DiyDecisionTree():
                 }
             }
         }
+        return model
 
-    def predict(self):
+    # @tools.debug
+    def predict(self, input_data=None):
         """
         Predict.
         """
-        input_data = {
-            "salary": 500,
-            "time": 15,
-            "free": False
-        }
+        if input_data is None:
+            input_data = {
+                "salary": 500,
+                "time": 15,
+                "free": False
+            }
         label = None
         model_dict = self.model
-        wihle label is None:
+        i_value = 1
+        while label is None:
+            print("level - {}".format(i_value))
             if "label" in list(model_dict.keys()):
                 label = model_dict["label"]
+                print("  label : {}".format(label))
                 break
             else:
-                attribute = model_dict.keys()[O]
+                attribute = list(model_dict.keys())[0]
                 value = input_data[attribute]
-                if self.model[attribute]["type"] == "numerical":
-                    condition = value >= self.model[attribute]["condition_value"]
-                if self.model[attribute]["type"] == "categorical":
-                    condition = value == self.model[attribute]["condition_value"]
-                model_dict = model_dict[attribute]["class_positive"] if condition: else model_dict[attribute]["class_negative"]
+                if model_dict[attribute]["type"] == "numerical":
+                    condition = value >= model_dict[attribute]["condition_value"]
+                    operator = ">=" if condition else "<"
+                    print("  {} : {} [{} {}]".format(
+                        attribute, value, operator, model_dict[attribute]["condition_value"]))
+                if model_dict[attribute]["type"] == "categorical":
+                    condition = value == model_dict[attribute]["condition_value"]
+                    operator = "==" if condition else "!="
+                    print("  {} : {} [{} {}]".format(
+                        attribute, value, operator, model_dict[attribute]["condition_value"]))
+                model_dict = model_dict[attribute]["class_positive"] \
+                    if condition else model_dict[attribute]["class_negative"]
+            i_value += 1
+
         return label
 
     def fit(self):
         """
         Fit.
         """
+        stop_condition = False
+        while not stop_condition:
+            attribute = compute_richest_attribute()
         print("To be coded.")
+
 

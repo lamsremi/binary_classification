@@ -3,31 +3,38 @@ script to use the logistic regression model
 """
 import pickle
 
-from model.diy.model import DiyLogisticReg
+from model.logisticRegression.diy.model import DiyLogisticReg
+from model.decisionTree.diy.model import DiyDecisionTree
+
 # import tools
 
-
 # @tools.debug
-def predict(x_array, model_string, model=None):
+def predict(x_array, model_type, model_source, model=None):
     """Main function."""
     if model is None:
         # Load the model
-        model = load_model(model_string=model_string)
+        model = load_model(model_type, model_source)
     # Predict
     y_array = model.predict(x_array)
     return y_array, model
 
 
-def load_model(model_string):
+def load_model(model_type, model_source):
     """Load a particular model."""
-    if model_string == "scikit_learn":
-        path_sav = "model/{}/trained_model.sav".format(model_string)
-        loaded_model = pickle.load(open(path_sav, 'rb'))
-    if model_string == "diy":
-        loaded_model = DiyLogisticReg()
+    if model_type == "logisticRegression":
+        if model_source == "scikit_learn":
+            path_sav = "model/{}/{}/trained_model.sav".format(model_type, model_source)
+            loaded_model = pickle.load(open(path_sav, 'rb'))
+        elif model_source == "diy":
+            loaded_model = DiyLogisticReg()
+    elif model_type == "decisionTree":
+        if model_source == "diy":
+            loaded_model = DiyDecisionTree()
     return loaded_model
 
 
-# if __name__ == '__main__':
-#     MODEL_STRING = "scikit_learn"
-#     predict(MODEL_STRING)
+if __name__ == '__main__':
+    X_ARRAY = None
+    MODEL_TYPE = "decisionTree"
+    MODEL_SOURCE = "diy"
+    predict(X_ARRAY, MODEL_TYPE, MODEL_SOURCE)
