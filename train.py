@@ -13,7 +13,7 @@ def train(model_type, model_source, path_pickle):
     # Load the data
     x_array, y_array = utils.load_data(path_pickle)
     # Filter data
-    x_array, y_array = utils.filter_array(x_array, y_array, 0, 600)
+    # x_array, y_array = utils.filter_array(x_array, y_array, 0, 600)
     # Normalize data
     x_array = utils.normalize(x_array)
     # Init the model
@@ -47,7 +47,7 @@ def persist_model(trained_model, path_pickle):
 
 
 if __name__ == '__main__':
-    PATH_PICKLE = "data/diabete/data_array.pkl"
+    PATH_PICKLE = "data/us_election/data_array.pkl"
     MODEL_TYPE = "logisticRegression"
     MODEL_SOURCE = "diy"
     train(MODEL_TYPE, MODEL_SOURCE, PATH_PICKLE)

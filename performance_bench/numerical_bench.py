@@ -12,16 +12,16 @@ def confusion_matrix(y_test, y_prediction):
     false_positive = 0
     true_negative = 0
     false_negative = 0
-    for i_index in range(len(y_test)):
-        if y_prediction[i_index] == 1: # Predict a positive
-            if y_test[i_index] == 1:
+    for prediction, test in zip(y_prediction, y_test):
+        if prediction == 1:
+            if test == 1:
                 true_positive += 1
-            elif y_test[i_index] == 0:
+            elif test == 0:
                 false_positive += 1
-        elif y_prediction[i_index] == 0:
-            if y_test[i_index] == 1:
+        elif prediction == 0:
+            if test == 1:
                 false_negative += 1
-            elif y_test[i_index] == 0:
+            elif test == 0:
                 true_negative += 1
     matrix = pd.DataFrame(
         [

@@ -9,16 +9,20 @@ from main import predict
 
 import utils
 import tools
-from performance.numerical_bench import confusion_matrix
+from performance_bench.numerical_bench import confusion_matrix
 
-def test(model_string):
+# @tools.debug
+def test(model_type, model_source):
     """Perform test."""
     # Load input
     x_test, y_test = load_input("diabete")
     # Predict output
-    y_prediction, model = predict(x_test, model_string)
+    y_prediction, model = predict(
+        x_test,
+        model_type,
+        model_source)
     # Quantitative performance
-    # performance = evaluate(y_test, y_prediction)
+    performance = evaluate(y_test, y_prediction)
     # Qualitative performance [Graphical]
     # display_results(x_test, y_test, y_prediction)
 
@@ -32,7 +36,7 @@ def load_input(input_source):
     return x_test, y_test
 
 
-# @tools.debug
+@tools.debug
 def evaluate(y_test, y_prediction):
     """Computethe numerical performance."""
     # Compute confusion matrix
@@ -40,7 +44,7 @@ def evaluate(y_test, y_prediction):
     performance = []
     # for i_index in range(len(y_test)):
     #     performance.append([y_test[i_index], y_prediction[i_index]])
-    return performance
+    return result
 
 
 def display_results(x_test, y_test, y_prediction):
@@ -49,4 +53,6 @@ def display_results(x_test, y_test, y_prediction):
 
 
 if __name__ == '__main__':
-    test(model_string="diy")
+    MODEL_TYPE = "logisticRegression"
+    MODEL_SOURCE = "diy"
+    test(MODEL_TYPE, MODEL_SOURCE)

@@ -60,13 +60,21 @@ class DiyLogisticReg():
         x_array = np.array(x_array)
         y_array = np.array(y_array)
         alpha = 0.0001
-        for i_iter in range(500):
+        for i_iter in range(50):
             # print("---> i_iter : {}".format(i_iter))
-            self.theta_array = np.add(
-                self.theta_array.reshape([1, self.input_dim]),
-                -alpha*self.derivative_cost_function(x_array, y_array).reshape([1, self.input_dim])
-            )
+            self.theta_array = self.update_weights(alpha, x_array, y_array)
             print("Cost at iteration {} : {}".format(i_iter, self.cost_function(x_array, y_array)))
+
+    # @tools.debug
+    def update_weights(self, alpha, x_array, y_array):
+        """
+        Update the weights.
+        """
+        weights = np.add(
+            self.theta_array.reshape([1, self.input_dim]),
+            -alpha*self.derivative_cost_function(x_array, y_array).reshape([1, self.input_dim])
+        )
+        return weights
 
     # @tools.debug
     def cost_function(self, x_array, y_array):
@@ -93,37 +101,6 @@ class DiyLogisticReg():
         to each of the theta element.
         """
         m_value = len(y_array)
-
-        # derivative_vector = np.zeros([len(self.theta_array)])
-        # for i_index in range(len(self.theta_array)):
-        #     print("----------> i_index : {}".format(i_index))
-        #     # Derivative of the exponential
-        #     expo_derivative = - self.theta_array[i_index]
-        #     print("----------> expo_derivative : {}".format(expo_derivative))
-        #     # Derivative of the sigmoid
-        #     sigmoid_derivative = np.multiply(
-        #         expo_derivative,
-        #         np.multiply(
-        #             np.exp(-1*np.dot(x_array, self.theta_array)),
-        #             1/np.multiply(
-        #                 np.array([self.compute_probability(x_vect) for x_vect in x_array]),
-        #                 np.array([self.compute_probability(x_vect) for x_vect in x_array]))))
-        #     # Derivative of the log
-        #     log_sigmoid_derivative = np.multiply(
-        #         sigmoid_derivative,
-        #         1/np.array([self.compute_probability(x_vect) for x_vect in x_array]))
-        #     # Derivative of 1 - log
-        #     one_log_sigmoid_derivative = np.multiply(
-        #         -sigmoid_derivative,
-        #         1/(1-np.array([self.compute_probability(x_vect) for x_vect in x_array])))
-        #     # First sum
-        #     sum_1 = np.dot(y_array, log_sigmoid_derivative)
-        #     # Second sum
-        #     sum_2 = np.dot(1-y_array, one_log_sigmoid_derivative)
-        #     # Summarize the 2 sums
-        #     derivative_vector[i_index] = -1/m_value*(sum_1 + sum_2)
-
-            # print("----------> result derivative vector : {}".format(derivative_vector))
 
         derivative_vector = np.array(
             [

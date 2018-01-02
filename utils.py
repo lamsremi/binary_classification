@@ -4,6 +4,8 @@ Gather the utils function.
 import pickle
 import numpy as np
 
+import tools
+
 # @tools.debug
 def load_data(path_pickle):
     """
