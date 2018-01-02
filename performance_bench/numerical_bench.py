@@ -5,7 +5,7 @@ import pandas as pd
 
 import tools
 
-@tools.debug
+# @tools.debug
 def confusion_matrix(y_test, y_prediction):
     """Compute confusion matrix."""
     true_positive = 0

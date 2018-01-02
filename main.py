@@ -4,7 +4,7 @@ script to use the logistic regression model
 import pickle
 
 from model.logisticRegression.diy.model import DiyLogisticReg
-from model.decisionTree.diy.model import DiyDecisionTree
+# from model.decisionTree.diy.model import DiyDecisionTree
 
 # import tools
 
@@ -26,7 +26,9 @@ def load_model(model_type, model_source):
             path_sav = "model/{}/{}/trained_model.sav".format(model_type, model_source)
             loaded_model = pickle.load(open(path_sav, 'rb'))
         elif model_source == "diy":
+            path_pickle = "model/{}/{}/trained_model.pkl".format(model_type, model_source)
             loaded_model = DiyLogisticReg()
+            loaded_model.load(path_pickle)
     elif model_type == "decisionTree":
         if model_source == "diy":
             loaded_model = DiyDecisionTree()

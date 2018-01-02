@@ -1,6 +1,7 @@
 """
 model do it yourself logistic regression
 """
+import pickle
 import numpy as np
 
 import tools
@@ -10,8 +11,9 @@ class DiyLogisticReg():
 
     def __init__(self):
         """Init the model instance."""
-        self.theta_array = np.array([-1, -1, 0, -1, 0, 1, -1, 1])/100
-        self.input_dim = 8
+        self.input_dim = 0
+        self.theta_array = 0
+
 
     def predict(self, x_array):
         """
@@ -20,15 +22,17 @@ class DiyLogisticReg():
         x_array = np.array(x_array)
         # If one input
         if x_array.ndim == 1:
+            self.input_dim = x_array.shape[0]
             # Compute the probability
             probability = self.compute_probability(x_array)
             # Categorize it
             y_value = 1 if probability >= 0.5 else 0
             # Return the value
             return y_value
-        # If a list of inputs
+        # If an array of inputs
         elif x_array.ndim == 2:
             y_array = []
+            self.input_dim = x_array.shape[1]
             for x_vect in x_array:
                 # Compute the probability
                 probability = self.compute_probability(x_vect)
@@ -53,17 +57,42 @@ class DiyLogisticReg():
     # ---------------------------------------------------------------------------------
 
     # @tools.debug
-    def fit(self, x_array, y_array):
+    def fit(
+            self,
+            x_array,
+            y_array,
+            alpha=0.0005,
+            n_iter=100
+        ):
         """
         Train the model.
         """
+        self.input_dim = x_array.shape[1]
+        self.theta_array = np.zeros(self.input_dim)
+
         x_array = np.array(x_array)
         y_array = np.array(y_array)
-        alpha = 0.0001
-        for i_iter in range(50):
-            # print("---> i_iter : {}".format(i_iter))
-            self.theta_array = self.update_weights(alpha, x_array, y_array)
+        # print(x_array.shape)
+        alpha = 0.0005
+        x_arrays = self.create_batches(x_array, batch_size=50)
+        y_arrays = self.create_batches(y_array, batch_size=50)
+        for i_iter in range(n_iter):
+            theta_arrays = []
+            for x_arr, y_arr in zip(x_arrays, y_arrays):
+                theta_arrays.append(self.update_weights(alpha, x_arr, y_arr))
+            self.theta_array = np.mean(theta_arrays, axis=0)
             print("Cost at iteration {} : {}".format(i_iter, self.cost_function(x_array, y_array)))
+
+    @staticmethod
+    # @tools.debug
+    def create_batches(array, batch_size):
+        """Create batches."""
+        n_records = array.shape[0]
+        arrays = []
+        for index in range(n_records//batch_size):
+            arrays.append(array[index*50:(index+1)*50])
+        arrays.append(array[n_records//batch_size:])
+        return arrays
 
     # @tools.debug
     def update_weights(self, alpha, x_array, y_array):
@@ -74,7 +103,7 @@ class DiyLogisticReg():
             self.theta_array.reshape([1, self.input_dim]),
             -alpha*self.derivative_cost_function(x_array, y_array).reshape([1, self.input_dim])
         )
-        return weights
+        return weights[0]
 
     # @tools.debug
     def cost_function(self, x_array, y_array):
@@ -136,5 +165,8 @@ class DiyLogisticReg():
     # @tools.debug
     def persist(self, path_pickle):
         """Save the model."""
-        print("Persistence of the diy model to be coded")
+        pickle.dump(self.theta_array, open(path_pickle, "wb"))
 
+    def load(self, path_pickle):
+        """Load the model."""
+        self.theta_array = pickle.load(open(path_pickle, 'rb'))

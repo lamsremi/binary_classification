@@ -1,5 +1,8 @@
 """
 This script is an implementation of decision tree model.
+
+Implementation of ID3 (Iterative Dichotomizer 3) algorithm
+
 Decision tree features:
 - Attribute selection: Information gain or Gini index?
 - Prunning: None, pre or post?

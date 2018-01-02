@@ -21,11 +21,17 @@ class ScikitLogisticReg():
             class_weight=None,
             random_state=None,
             solver="liblinear",
-            max_iter=100,
+            max_iter=20,
             multi_class="ovr",
             verbose=1,
             warm_start=False,
             n_jobs=1)
+
+    def predict(self, x_array):
+        """Main functionnality of the model.
+        """
+        y_array = self.model.predict(x_array)
+        return y_array
 
     def fit(self, x_array, y_array):
         """
@@ -56,10 +62,3 @@ class ScikitLogisticReg():
     def persist(self, path_sav):
         """Save the model."""
         pickle.dump(self.model, open(path_sav, "wb"))
-
-
-    def predict(self, x_array):
-        """Main functionnality of the model.
-        """
-        y_array = self.model.predict(x_array)
-        return y_array

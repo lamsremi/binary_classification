@@ -12,10 +12,10 @@ import tools
 from performance_bench.numerical_bench import confusion_matrix
 
 # @tools.debug
-def test(model_type, model_source):
+def test(model_type, model_source, input_source):
     """Perform test."""
     # Load input
-    x_test, y_test = load_input("diabete")
+    x_test, y_test = load_input(input_source)
     # Predict output
     y_prediction, model = predict(
         x_test,
@@ -32,7 +32,7 @@ def load_input(input_source):
     """Load the input based on the input source."""
     x_test, y_test = utils.load_data(
         "data/{}/data_array.pkl".format(input_source))
-    x_test, y_test = utils.filter_array(x_test, y_test, 0, 300)
+    # x_test, y_test = utils.filter_array(x_test, y_test, 0, 300)
     return x_test, y_test
 
 
@@ -55,4 +55,5 @@ def display_results(x_test, y_test, y_prediction):
 if __name__ == '__main__':
     MODEL_TYPE = "logisticRegression"
     MODEL_SOURCE = "diy"
-    test(MODEL_TYPE, MODEL_SOURCE)
+    INPUT_SOURCE = "us_election"
+    test(MODEL_TYPE, MODEL_SOURCE, INPUT_SOURCE)
