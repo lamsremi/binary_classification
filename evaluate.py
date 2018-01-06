@@ -9,10 +9,10 @@ from main import predict
 
 import utils
 import tools
-from performance_bench.numerical_bench import confusion_matrix
+from performance.numerical_bench import confusion_matrix
 
 # @tools.debug
-def test(model_type, model_source, input_source):
+def evaluate(model_type, model_source, input_source):
     """Perform test."""
     # Load input
     x_test, y_test = load_input(input_source)
@@ -56,4 +56,4 @@ if __name__ == '__main__':
     MODEL_TYPE = "logisticRegression"
     MODEL_SOURCE = "diy"
     INPUT_SOURCE = "us_election"
-    test(MODEL_TYPE, MODEL_SOURCE, INPUT_SOURCE)
+    evaluate(MODEL_TYPE, MODEL_SOURCE, INPUT_SOURCE)

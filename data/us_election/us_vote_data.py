@@ -36,7 +36,7 @@ def load_raw_data(path_csv):
     data_df = pd.read_csv(
         path_csv,
         # nrows=4,
-        dtype = np.float
+        dtype=np.float
         # names=[
         #     "pregnancy_time", "glucose_concentration",
         #     "blood_pressure", "skin_thickness",

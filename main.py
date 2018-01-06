@@ -29,14 +29,11 @@ def load_model(model_type, model_source):
             path_pickle = "model/{}/{}/trained_model.pkl".format(model_type, model_source)
             loaded_model = DiyLogisticReg()
             loaded_model.load(path_pickle)
-    elif model_type == "decisionTree":
-        if model_source == "diy":
-            loaded_model = DiyDecisionTree()
     return loaded_model
 
 
 if __name__ == '__main__':
     X_ARRAY = None
-    MODEL_TYPE = "decisionTree"
+    MODEL_TYPE = "logisticRegression"
     MODEL_SOURCE = "diy"
     predict(X_ARRAY, MODEL_TYPE, MODEL_SOURCE)
