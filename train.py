@@ -1,14 +1,14 @@
 """
 Scrip to train a given model
 """
-from model.logisticRegression.scikit_learn.model import ScikitLogisticReg
-from model.logisticRegression.diy.model import DiyLogisticReg
+from model.scikit_learn.model import ScikitLogisticReg
+from model.diy.model import DiyLogisticReg
 
 import tools
 import utils
 
 
-def train(model_type, model_source, input_source):
+def train(model_type, input_source):
     """Main function."""
     # Load the data
     x_array, y_array = utils.load_data(
@@ -18,20 +18,19 @@ def train(model_type, model_source, input_source):
     # Normalize data
     x_array = utils.normalize(x_array)
     # Init the model
-    model_instance = init_model(model_type=model_type, model_source=model_source)
+    model_instance = init_model(model_type=model_type)
     # Train the model
     trained_model = fit(model_instance, x_array, y_array)
     # # Persist the model
-    persist_model(trained_model, model_type, model_source)
+    persist_model(trained_model, model_type)
 
 
-def init_model(model_type, model_source):
+def init_model(model_type):
     """Init the model."""
-    if model_type == "logisticRegression":
-        if model_source == "scikit_learn":
-            model_instance = ScikitLogisticReg()
-        elif model_source == "diy":
-            model_instance = DiyLogisticReg()
+    if model_type == "scikit_learn":
+        model_instance = ScikitLogisticReg()
+    elif model_type == "diy":
+        model_instance = DiyLogisticReg()
     return model_instance
 
 
@@ -42,20 +41,17 @@ def fit(model, x_array, y_array):
     return model
 
 
-def persist_model(trained_model, model_type, model_source):
+def persist_model(trained_model, model_type):
     """Persist the model."""
-    if model_type == "logisticRegression":
-        if model_source == "scikit_learn":
-            trained_model.persist(
-                path_sav="model/{}/{}/trained_model.sav".format(model_type, model_source))
-        elif model_source == "diy":
-            trained_model.persist(
-                path_pickle="model/{}/{}/trained_model.pkl".format(model_type, model_source))
-
+    if model_type == "scikit_learn":
+        trained_model.persist(
+            path_sav="model/{}/trained_model.sav".format(model_type))
+    elif model_type == "diy":
+        trained_model.persist(
+            path_pickle="model/{}/trained_model.pkl".format(model_type))
 
 
 if __name__ == '__main__':
-    MODEL_TYPE = "logisticRegression"
-    MODEL_SOURCE = "diy"
+    MODEL_TYPE = "diy"
     INPUT_SOURCE = "us_election"
-    train(MODEL_TYPE, MODEL_SOURCE, INPUT_SOURCE)
+    train(MODEL_TYPE, INPUT_SOURCE)

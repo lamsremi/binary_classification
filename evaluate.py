@@ -12,15 +12,14 @@ import tools
 from performance.numerical_bench import confusion_matrix
 
 # @tools.debug
-def evaluate(model_type, model_source, input_source):
+def evaluate(model_type, input_source):
     """Perform test."""
     # Load input
     x_test, y_test = load_input(input_source)
     # Predict output
     y_prediction, model = predict(
         x_test,
-        model_type,
-        model_source)
+        model_type)
     # Quantitative performance
     performance = evaluate(y_test, y_prediction)
     # Qualitative performance [Graphical]
@@ -53,7 +52,6 @@ def display_results(x_test, y_test, y_prediction):
 
 
 if __name__ == '__main__':
-    MODEL_TYPE = "logisticRegression"
-    MODEL_SOURCE = "diy"
+    MODEL_TYPE = "diy"
     INPUT_SOURCE = "us_election"
-    evaluate(MODEL_TYPE, MODEL_SOURCE, INPUT_SOURCE)
+    evaluate(MODEL_TYPE, INPUT_SOURCE)
