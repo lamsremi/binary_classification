@@ -3,26 +3,27 @@
 
 ## Introduction
 
-This module presents 2 different implementations of a unique logistic regression model:
-* The first one using the framwork scikit-learn.
-* The second one from scratch.
+This module presents 2 different implementations of the same logistic regression model :
+* The first implementation uses scikit-learn framework.
+* The second one is coded from scratch.
 
-The implemented model is a basic logistic regression model with the following attributes:
-* Stochastic Gradient Descent solver
-* No regularization
-* Cross entropy cost function
-* No batch
+The implemented model is a basic logistic regression classifier with the following attributes :
+* Stochastic Gradient Descent solver.
+* No regularization.
+* Cross Entropy as cost function.
+* No batch.
 
 
 ## Motivation
 
-The purpose of this exercice is to gain a complete understanding of how logistic regression work.
+The purpose of this exercice is to gain a better understanding on how does logistic regression work.
 
-It is also a good exercice to practice and improve python programming skills.
+It is also a good exercice to practice python programming.
 
 ## Code structure
 
-The code is structured as follow:
+The code is structured as follow :
+
 ```
 myLogisticRegression
 ├- docs/
@@ -49,7 +50,7 @@ myLogisticRegression
 
 ## Installation
 
-To use the diffrent implementations, you can directly clone the repository :
+To use the different implementations, you can directly clone the repository :
 
 ```
 $ git clone https://github.com/lamsremi/pyLogisticRegression.git
@@ -57,19 +58,19 @@ $ git clone https://github.com/lamsremi/pyLogisticRegression.git
 
 ### Using a virtual environment
 
-Firt create a virtual environment :
+Firt create the virtual environment :
 
 ```
 $ python3 -m venv path_to_the_env
 ```
 
-The activate it
+Activate it :
 
 ```
 $ source path_to_the_env/bin/activate
 ```
 
-Then install the requirements :
+Then install all the requirements :
 
 ```
 $ pip install -r requirements.txt
@@ -98,7 +99,7 @@ For training using a file :
                  stored_version="X")
 ```
 
-# Or from the terminal :
+Or from the terminal :
 
 ```
 $ python train.py
@@ -115,4 +116,4 @@ moise.remi@gmail.com
 
 MIT License
 
-Copyright (c) 2017 Rémi Moïse
+Copyright (c) 2017
