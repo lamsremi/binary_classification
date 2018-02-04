@@ -1,57 +1,82 @@
+"""Module used for fitting a model given a training dataset.
 """
-Scrip to train a given model
-"""
-from model.scikit_learn.model import ScikitLogisticReg
-from model.diy.model import DiyLogisticReg
+import importlib
+
+import pandas as pd
 
 import tools
-import utils
 
 
-def train(model_type, input_source):
-    """Main function."""
-    # Load the data
-    x_array, y_array = utils.load_data(
-        "data/{}/data_array.pkl".format(input_source))
-    # Filter data
-    # x_array, y_array = utils.filter_array(x_array, y_array, 0, 600)
-    # Normalize data
-    x_array = utils.normalize(x_array)
+def main(data_df=None,
+         data_source=None,
+         model_type=None,
+         starting_version=None,
+         stored_version=None):
+    """Fit a model.
+    Args:
+        data_df (DataFrame): dataset use to train
+        data_source (str): source to take the training dataset from.
+        model_type (str): type of model to train.
+    """
+    # Load data if None given
+    if data_df is None:
+        data_df = load_data(data_source)
+
     # Init the model
-    model_instance = init_model(model_type=model_type)
-    # Train the model
-    trained_model = fit(model_instance, x_array, y_array)
-    # # Persist the model
-    persist_model(trained_model, model_type)
+    model = init_model(model_type)
+
+    # Load parameters
+    model.load_parameters(model_version=starting_version)
+
+    # Fit the model
+    model.fit(data_df,
+              alpha=0.00001,
+              epochs=20)
+
+    # Persist the parameters
+    model.persist_parameters(model_version=stored_version)
+
+    # Return bool
+    return True
+
+
+def load_data(data_source):
+    """Load traiing data.
+    Args:
+        data_source (str): source to take the data from.
+    Return:
+        data_df (DataFrame): loaded table.
+    """
+    # Load data
+    data_df = pd.read_csv("data/{}/data.csv".format(data_source),
+                          nrows=400)
+
+    # Return the table
+    return data_df
 
 
 def init_model(model_type):
-    """Init the model."""
-    if model_type == "scikit_learn":
-        model_instance = ScikitLogisticReg()
-    elif model_type == "diy":
-        model_instance = DiyLogisticReg()
-    return model_instance
+    """Init an instance of the model
+    Args:
+        model_type (str): type of model to train.
+    Return:
+        model (instance Object): init model.
+    """
+    # Import model
+    model_module = importlib.import_module("library.{}.model".format(model_type))
 
+    # Init
+    model = model_module.Model()
 
-@tools.timeit
-def fit(model, x_array, y_array):
-    """Train a given model"""
-    model.fit(x_array, y_array)
+    # Return model
     return model
 
 
-def persist_model(trained_model, model_type):
-    """Persist the model."""
-    if model_type == "scikit_learn":
-        trained_model.persist(
-            path_sav="model/{}/trained_model.sav".format(model_type))
-    elif model_type == "diy":
-        trained_model.persist(
-            path_pickle="model/{}/trained_model.pkl".format(model_type))
-
-
 if __name__ == '__main__':
-    MODEL_TYPE = "diy"
-    INPUT_SOURCE = "us_election"
-    train(MODEL_TYPE, INPUT_SOURCE)
+    for source in ["us_election"]:
+        for model in ["scikit_learn_sag", "diy"]:
+            main(data_df=None,
+                 data_source=source,
+                 model_type=model,
+                 starting_version=None,
+                 stored_version="X")

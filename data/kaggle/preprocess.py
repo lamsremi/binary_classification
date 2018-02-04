@@ -5,12 +5,12 @@ import pandas as pd
 
 pd.set_option('display.width', 800)
 
-def main(path_raw_data, path_preprocessed_data=None):
+def main():
     """
     Preprocess the data.
     """
     # Load the raw data
-    raw_data_df = load_raw_data(path_raw_data)
+    raw_data_df = load_raw_data(path_raw_data="data/kaggle/raw_data/data.csv")
     # Study data
     study_data(raw_data_df)
     # Transform the data
@@ -18,7 +18,7 @@ def main(path_raw_data, path_preprocessed_data=None):
     # Study transformed data
     study_data(data_df)
     # Store the data
-    store(data_df, path_preprocessed_data)
+    store(data_df, path_preprocessed_data="data/kaggle/data.csv")
 
 
 def load_raw_data(path_raw_data):
@@ -58,9 +58,10 @@ def process(raw_data_df):
         "Survived"]]
     # Convert to dtype float
     for attribute in data_df.columns:
-        data_df[attribute] = raw_data_df[attribute].astype(float)
+        data_df[[attribute]] = raw_data_df[[attribute]].astype(float)
     # Drop all the NaN value
     data_df.dropna(inplace=True)
+    # Return the table
     return data_df
 
 
@@ -70,9 +71,3 @@ def store(data_df, path_preprocessed_data):
         path_preprocessed_data,
         index=False
         )
-
-
-if __name__ == '__main__':
-    PATH_RAW_DATA = "raw_data/data.csv"
-    PATH_PREPROCESSED_DATA = "data.csv"
-    main(PATH_RAW_DATA, PATH_PREPROCESSED_DATA)

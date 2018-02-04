@@ -9,12 +9,13 @@ import pandas as pd
 
 pd.set_option('display.width', 800)
 
-def main(path_raw_data, path_preprocessed_data=None):
+
+def main():
     """
     Preprocess the data.
     """
     # Load the raw data
-    raw_data_df = load_raw_data(path_raw_data)
+    raw_data_df = load_raw_data(path_raw_data="data/us_election/raw_data/data.csv")
     # Study data
     study_data(raw_data_df)
     # Transform the data
@@ -22,7 +23,7 @@ def main(path_raw_data, path_preprocessed_data=None):
     # Study transformed data
     study_data(data_df)
     # Store the data
-    store(data_df, path_preprocessed_data)
+    store(data_df, path_preprocessed_data="data/us_election/data.csv")
 
 
 def load_raw_data(path_raw_data):
@@ -63,9 +64,3 @@ def store(data_df, path_preprocessed_data):
         path_preprocessed_data,
         index=False
         )
-
-
-if __name__ == '__main__':
-    PATH_RAW_DATA = "raw_data/data.csv"
-    PATH_PREPROCESSED_DATA = "data.csv"
-    main(PATH_RAW_DATA, PATH_PREPROCESSED_DATA)
