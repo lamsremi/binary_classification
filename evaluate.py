@@ -5,53 +5,62 @@ Script for performance
 """
 import pandas as pd
 import numpy as np
+
 import predict
 import tools
-import performance.quantitative as quantitative
-import performance.qualitative as qualitative
 
 from performance.numerical_bench import confusion_matrix
 
 # @tools.debug
-def main(model_type, input_source):
+def main(model_type, model_version, data_source):
     """Perform test."""
-    # Load input
-    data_df = load_input(input_source)
-    # Predict output
-    data_df = predict_frame(
-        data_df,
-        model_type)
+    # Load labeled data
+    data_df = load_data(data_source)
+
+    # Predict
+    prediction_df = predict.main(data_df=data_df.iloc[:, :-1],
+                                 data_source=None,
+                                 model_type=model_type,
+                                 model_version=model_version)
+
     # Quantitative performance
-    performance = evaluate(data_df)
+    performance = evaluate(data_df, prediction_df)
 
 
-# @tools.debug
-def load_input(input_source):
-    """Load the input based on the input source."""
-    data_df = pd.read_csv("data/{}/data.csv".format(input_source))
+def load_data(data_source):
+    """Load traiing data.
+    Args:
+        data_source (str): source to take the data from.
+    Return:
+        data_df (DataFrame): loaded table.
+    """
+    # Load data
+    data_df = pd.read_csv("data/{}/data.csv".format(data_source),
+                          nrows=400)
+
+    # Return the table
     return data_df
 
-def predict_frame(data_df):
-    """Predict frame."""
-    predicted_data_df = data_df.copy()
-    for index, serie in data_df.ietrrows():
-        x_array = np.array(serie)
-        predicted_data_df.loc[index, "prediction"] = predict.main(x_array)
-    return data_df
 
 
 @tools.debug
-def evaluate(y_test, y_prediction):
+def evaluate(data_df, prediction_df):
     """Computethe numerical performance."""
+    # Set test
+    y_test = np.array(data_df.iloc[:, -1])
+
+    # Set prediction
+    y_prediction = np.array(prediction_df.iloc[:, 0])
+
     # Compute confusion matrix
     result = confusion_matrix(y_test, y_prediction)
-    performance = []
-    # for i_index in range(len(y_test)):
-    #     performance.append([y_test[i_index], y_prediction[i_index]])
+
+    # Return result
     return result
 
 
 if __name__ == '__main__':
-    MODEL_TYPE = "diy"
-    INPUT_SOURCE = "us_election"
-    main(MODEL_TYPE, INPUT_SOURCE)
+    for model in ["scikit_learn_sag", "diy"]:
+        main(model_type=model,
+             model_version="X",
+             data_source="us_election")
