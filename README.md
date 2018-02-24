@@ -25,27 +25,34 @@ It is also a good exercice to practice python programming.
 The code is structured as follow :
 
 ```
-myLogisticRegression
-├- docs/
-│   └- Lect09.pdf
+pyLogisticRegression
+│
 ├- data/
 │   ├- diabetes/
 │   ├- kaggle/
 │   └- us_election/
+│
 ├- library/
 │   ├- doityourself/
 │   └- scikit_learn/
+│
 ├- performance/
 │   └- num_bench/
+│
 ├- unittest/
 │   └- test_core.py
-├- .gitignore
+│
+├- evaluate.py
 ├- predict.py
 ├- prepare.py
+├- train.py
+│
+├- docs/
+│   └- Lect09.pdf
+│
+├- .gitignore
 ├- README.md
-├- requirements.txt
-├- tools.py
-└- train.py
+└- requirements.txt
 ```
 
 ## Installation
@@ -58,7 +65,7 @@ $ git clone https://github.com/lamsremi/pyLogisticRegression.git
 
 ### Using a virtual environment
 
-Firt create the virtual environment :
+First create the virtual environment :
 
 ```
 $ python3 -m venv path_to_the_env

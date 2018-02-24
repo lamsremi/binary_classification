@@ -20,10 +20,10 @@ class Model():
         """
         self._model = None
 
-    def predict(self, data_df):
+    def predict(self, inputs_data):
         """Prediction function of the model.
         Arg:
-            data_df (DataFrame): table of input data to predict.
+            inputs_data (DataFrame): table of input data to predict.
         Return
             prediction_df (DataFrame): table of prediction.
         """
@@ -31,7 +31,7 @@ class Model():
         prediction_df = pd.DataFrame()
 
         # Iterate
-        for row in data_df.itertuples():
+        for row in inputs_data.itertuples():
             prediction_df.loc[row[0], "prediction"] = self.predict_record(row)
 
         # Return the prediction table
@@ -51,10 +51,10 @@ class Model():
         # Return prediction
         return y_array
 
-    def fit(self, data_df, alpha, epochs):
+    def fit(self, train_data, alpha, epochs):
         """Fit the model.
         Args:
-            data_df (DataFrame): labeled dataset for fitting.
+            train_data (DataFrame): labeled dataset for fitting.
         Note:
             * Scikit-learn framework:
                 Input: array-like, shape = [n_samples, n_features]
@@ -92,7 +92,7 @@ class Model():
                                              warm_start=False,
                                              n_jobs=1)
 
-        x_array, y_array = self.format_data(data_df)
+        x_array, y_array = self.format_data(train_data)
         self._model.fit(x_array, y_array)
 
     def load_parameters(self, model_version):
@@ -140,14 +140,14 @@ class Model():
 
     @staticmethod
     # @tools.debug
-    def format_data(data_df):
+    def format_data(train_data):
         """Transform the data in the proper format.
 
         So it can be used by the method predict of scikit learn.
 
         Args:
-            data_df (DataFrame): training dataset.
+            train_data (DataFrame): training dataset.
         """
-        x_array = np.array(data_df.iloc[:, :-1])
-        y_array = np.array(data_df.iloc[:, -1])
+        x_array = np.array(train_data.iloc[:, :-1])
+        y_array = np.array(train_data.iloc[:, -1])
         return x_array, y_array

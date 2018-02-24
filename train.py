@@ -1,4 +1,4 @@
-"""Module used for fitting a model given a training dataset.
+"""Module to fit a model given a training dataset.
 """
 import importlib
 
@@ -7,52 +7,54 @@ import pandas as pd
 import tools
 
 
-def main(data_df=None,
-         data_source=None,
+def main(train_data=None,
+         dataset=None,
          model_type=None,
-         starting_version=None,
-         stored_version=None):
+         start_version=None,
+         end_version=None):
     """Fit a model.
     Args:
-        data_df (DataFrame): dataset use to train
-        data_source (str): source to take the training dataset from.
+        train_data (DataFrame): dataset use to train
+        dataset (str): source to take the training dataset from.
         model_type (str): type of model to train.
+        start_version (str): version of model to start the training from.
+        end_version (str): version to store the parameters.
     """
     # Load data if None given
-    if data_df is None:
-        data_df = load_data(data_source)
+    if train_data is None:
+        train_data = load_data(dataset)
 
     # Init the model
     model = init_model(model_type)
 
     # Load parameters
-    model.load_parameters(model_version=starting_version)
+    model.load_parameters(model_version=start_version)
 
     # Fit the model
-    model.fit(data_df,
+    model.fit(train_data,
               alpha=0.00001,
               epochs=20)
 
     # Persist the parameters
-    model.persist_parameters(model_version=stored_version)
+    model.persist_parameters(model_version=end_version)
 
     # Return bool
     return True
 
 
-def load_data(data_source):
+def load_data(dataset):
     """Load traiing data.
     Args:
-        data_source (str): source to take the data from.
+        dataset (str): source to take the data from.
     Return:
-        data_df (DataFrame): loaded table.
+        train_data (DataFrame): loaded table.
     """
     # Load data
-    data_df = pd.read_csv("data/{}/data.csv".format(data_source),
-                          nrows=400)
+    train_data = pd.read_csv("data/{}/data.csv".format(dataset),
+                             nrows=400)
 
     # Return the table
-    return data_df
+    return train_data
 
 
 def init_model(model_type):
@@ -75,8 +77,8 @@ def init_model(model_type):
 if __name__ == '__main__':
     for source in ["us_election"]:
         for model in ["scikit_learn_sag", "diy"]:
-            main(data_df=None,
-                 data_source=source,
+            main(train_data=None,
+                 dataset=source,
                  model_type=model,
-                 starting_version=None,
-                 stored_version="X")
+                 start_version=None,
+                 end_version="X")
