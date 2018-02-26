@@ -26,10 +26,10 @@ class Model():
         self._biais = None
 
 
-    def predict(self, data_df):
+    def predict(self, inputs_data):
         """Perfom a prediction.
         Args:
-            data_df (DataFrame): list of records to predict.
+            inputs_data (DataFrame): list of records to predict.
         Return:
             prediction_df (DataFrame):
         """
@@ -37,7 +37,7 @@ class Model():
         prediction_df = pd.DataFrame()
 
         # Iterate
-        for row in data_df.itertuples():
+        for row in inputs_data.itertuples():
             prediction_df.loc[row[0], "prediction"] = self.predict_record(row)
 
         # Return the prediction table
@@ -92,18 +92,18 @@ class Model():
 
 
     def fit(self,
-            data_df,
+            train_data,
             alpha,
             epochs):
         """Fit the parameters of the model.
         Args:
-            data_df (DataFrame): labeled dataset for fitting.
+            train_data (DataFrame): labeled dataset for fitting.
         """
         # Extract input of shape [number_inputs, input_dimension]
-        x_array = np.array(data_df.iloc[:, :-1])
+        x_array = np.array(train_data.iloc[:, :-1])
 
         # Extract labeled data from the last column of shape [number_inputs, 1]
-        y_array = np.array(data_df.iloc[:, -1:])
+        y_array = np.array(train_data.iloc[:, -1:])
 
         # If starting from nothing
         if self._input_dim is None:
@@ -139,14 +139,8 @@ class Model():
             # Update weights parameters
             self._theta_array += alpha * derivative_weights
 
-            # Display the weights
-            # print(self._theta_array)
-
             # Update biais
             self._biais += alpha * derivative_biais
-
-            # Display the biais
-            # print(self._biais)
 
 
     # @tools.debug

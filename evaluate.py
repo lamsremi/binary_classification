@@ -1,7 +1,4 @@
-"""
-Script for performance
-
-- Select the model to assess the performance
+"""Module to evaluate the performance of a model.
 """
 import pandas as pd
 import numpy as np
@@ -12,48 +9,54 @@ import tools
 from performance.numerical_bench import confusion_matrix
 
 # @tools.debug
-def main(model_type, model_version, data_source):
-    """Perform test."""
+def main(model_type,
+         model_version,
+         dataset):
+    """Perform test.
+    """
     # Load labeled data
-    data_df = load_data(data_source)
+    inputs_data, truth_data = load_data(dataset)
 
     # Predict
-    prediction_df = predict.main(data_df=data_df.iloc[:, :-1],
-                                 data_source=None,
-                                 model_type=model_type,
-                                 model_version=model_version)
+    prediction_data = predict.main(inputs_data=inputs_data,
+                                   model_type=model_type,
+                                   model_version=model_version)
 
     # Quantitative performance
-    performance = evaluate(data_df, prediction_df)
+    performance = evaluate(truth_data, prediction_data)
 
 
-def load_data(data_source):
+def load_data(dataset):
     """Load traiing data.
     Args:
-        data_source (str): source to take the data from.
+        dataset (str): source to take the data from.
     Return:
-        data_df (DataFrame): loaded table.
+        inputs_data (DataFrame): loaded table of input data.
+        truth_data (DataFrame): expected output.
     """
     # Load data
-    data_df = pd.read_csv("data/{}/data.csv".format(data_source),
+    data_df = pd.read_csv("data/{}/data.csv".format(dataset),
                           nrows=400)
-
+    # Inputs data
+    inputs_data = data_df.iloc[:, :-1]
+    # Truth
+    truth_data = data_df.iloc[:, -1]
     # Return the table
-    return data_df
+    return inputs_data, truth_data
 
 
 
 @tools.debug
-def evaluate(data_df, prediction_df):
+def evaluate(truth_data, prediction_data):
     """Computethe numerical performance."""
     # Set test
-    y_test = np.array(data_df.iloc[:, -1])
+    y_truth = np.array(truth_data)
 
     # Set prediction
-    y_prediction = np.array(prediction_df.iloc[:, 0])
+    y_prediction = np.array(prediction_data)
 
     # Compute confusion matrix
-    result = confusion_matrix(y_test, y_prediction)
+    result = confusion_matrix(y_truth, y_prediction)
 
     # Return result
     return result
@@ -63,4 +66,4 @@ if __name__ == '__main__':
     for model in ["scikit_learn_sag", "diy"]:
         main(model_type=model,
              model_version="X",
-             data_source="us_election")
+             dataset="us_election")
