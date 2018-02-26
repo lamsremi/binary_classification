@@ -58,7 +58,7 @@ $ git clone https://github.com/lamsremi/pyLogisticRegression.git
 
 ### Using a virtual environment
 
-Firt create the virtual environment :
+First create the virtual environment :
 
 ```
 $ python3 -m venv path_to_the_env
