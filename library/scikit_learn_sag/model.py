@@ -25,7 +25,6 @@ class Model():
         # return [self._predict_instance(row) for row in inputs_data]
         return list(self._model.predict(inputs_data))
 
-
     def fit(self, labeled_data, alpha, epochs):
         """Fit the model.
         Args:
@@ -88,7 +87,6 @@ class Model():
             except OSError:
                 print("Can't find the model to load, please choose an existing version.")
                 sys.exit()
-
 
     def persist_parameters(self, model_version):
         """Persist the parameters of the model.

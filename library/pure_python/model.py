@@ -21,7 +21,6 @@ class Model():
         self._theta_array = None
         self._biais = None
 
-
     def predict(self, inputs_data):
         """Perfom a prediction.
         Args:
@@ -31,7 +30,6 @@ class Model():
         """
         # Return the prediction list
         return [self._predict_instance(row) for row in inputs_data]
-
 
     def _predict_instance(self, x_array):
         """Predict one record.
@@ -51,7 +49,6 @@ class Model():
         # Return the value
         return y_value
 
-
     def load_parameters(self, model_version):
         """Load the model's parameters.
         """
@@ -69,7 +66,6 @@ class Model():
             # Load the biais
             with open(folder_path + "/biais.pkl", "rb") as handle:
                 self._biais = pickle.load(handle)
-
 
     def fit(self,
             labeled_data,
@@ -119,21 +115,18 @@ class Model():
             # Update biais
             self._biais += alpha * biais_derivative
 
-
     # @tools.debug
     def persist_parameters(self, model_version):
-        """Persist model's parameters.
+        """Persist the parameters of the model.
         Args:
             model_version (str): version of model to store
         """
         # Set the folder path
         folder_path = "library/pure_python/params/" + model_version
-
         # Check if folder exists
         if not os.path.exists(folder_path):
             # Create the folder
             os.mkdir(folder_path)
-
         # Persist the input dimension
         with open(folder_path + "/input_dim.pkl", "wb") as handle:
             pickle.dump(self._input_dim, handle)
