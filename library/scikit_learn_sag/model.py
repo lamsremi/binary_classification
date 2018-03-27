@@ -11,8 +11,7 @@ class Model():
     """Logistic Regression Class.
     """
     def __init__(self):
-        """Init class.
-        """
+        """Instanciate object."""
         self._model = None
 
     def predict(self, inputs_data):

@@ -3,7 +3,6 @@
 import os
 import pickle
 
-
 import tools
 from library.pure_python.utils import cost, cost_derivative, product, sigmoid
 

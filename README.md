@@ -4,8 +4,8 @@
 ## Introduction
 
 This module presents 2 different implementations of the same logistic regression model :
-* The first implementation uses scikit-learn framework.
-* The second one is coded from scratch.
+* The first and main implementation is in pure python using only native python 3.6.4 libraries.
+* The second one is based on scikit learn framework.
 
 The implemented model is a basic logistic regression classifier with the following attributes :
 * Stochastic Gradient Descent solver.
@@ -33,16 +33,9 @@ pyLogisticRegression
 │   └- us_election/
 │
 ├- library/
-│   ├- doityourself/
+│   ├- pure_python/
 │   └- scikit_learn/
 │
-├- performance/
-│   └- num_bench/
-│
-├- unittest/
-│   └- test_core.py
-│
-├- evaluate.py
 ├- predict.py
 ├- prepare.py
 ├- train.py
@@ -85,23 +78,13 @@ $ pip install -r requirements.txt
 
 ## Use
 
-For training using a file :
+In the terminal
 
 ```
->>> form train import main
->>> for source in ["us_election"]:
-        for model in ["scikit_learn_sag", "diy"]:
-            main(data_df=None,
-                 data_source=source,
-                 model_type=model,
-                 starting_version=None,
-                 stored_version="X")
+$ python train.py pure_python us_election
 ```
-
-Or from the terminal :
-
 ```
-$ python train.py
+$ python train.py <model_type> <data_source>
 ```
 
 
