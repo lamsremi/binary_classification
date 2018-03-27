@@ -1,5 +1,6 @@
-"""Module to fit a model given a training dataset.
-"""
+"""Module to fit a model given a labeled dataset."""
+import sys
+import pickle
 import importlib
 
 import pandas as pd
@@ -7,22 +8,25 @@ import pandas as pd
 import tools
 
 
-def main(train_data=None,
-         dataset=None,
-         model_type=None,
-         start_version=None,
-         end_version=None):
+def main(model_type,
+         start_version,
+         end_version,
+         data_source,
+         labeled_data):
     """Fit a model.
     Args:
-        train_data (DataFrame): dataset use to train
-        dataset (str): source to take the training dataset from.
         model_type (str): type of model to train.
         start_version (str): version of model to start the training from.
         end_version (str): version to store the parameters.
+        data_source (str): source to take the labeled dataset from.
+        labeled_data (list): dataset use to train
+        [
+            ([ 0.0, 6.0, 6.0, 2.0], 1.0)
+            ([ 8.0, 7.0, 4.0, 2.0], 1.0)
+        ]
     """
-    # Load data if None given
-    if train_data is None:
-        train_data = load_data(dataset)
+    # Load data
+    labeled_data = load_data(data_source) if labeled_data is None else labeled_data
 
     # Init the model
     model = init_model(model_type)
@@ -31,54 +35,39 @@ def main(train_data=None,
     model.load_parameters(model_version=start_version)
 
     # Fit the model
-    model.fit(train_data,
+    model.fit(labeled_data,
               alpha=0.00001,
               epochs=20)
 
     # Persist the parameters
     model.persist_parameters(model_version=end_version)
 
-    # Return bool
-    return True
 
-
-def load_data(dataset):
-    """Load traiing data.
-    Args:
-        dataset (str): source to take the data from.
-    Return:
-        train_data (DataFrame): loaded table.
-    """
-    # Load data
-    train_data = pd.read_csv("data/{}/data.csv".format(dataset),
-                             nrows=400)
-
-    # Return the table
-    return train_data
+def load_data(data_source):
+    """Load labeled data."""
+    with open("data/{}/data.pkl".format(data_source), "rb") as handle:
+        labeled_data = pickle.load(handle)
+    return labeled_data
 
 
 def init_model(model_type):
-    """Init an instance of the model
+    """Instanciate an instance of the class of the given type of model.
     Args:
         model_type (str): type of model to train.
     Return:
-        model (instance Object): init model.
+        model (Model): instance of Model.
     """
     # Import model
     model_module = importlib.import_module("library.{}.model".format(model_type))
-
-    # Init
-    model = model_module.Model()
-
-    # Return model
-    return model
+    # Return the instance
+    return model_module.Model()
 
 
 if __name__ == '__main__':
-    for source in ["us_election"]:
-        for model in ["scikit_learn_sag", "diy"]:
-            main(train_data=None,
-                 dataset=source,
-                 model_type=model,
-                 start_version=None,
-                 end_version="X")
+    model = sys.argv[1] if len(sys.argv) > 1 else "pure_python"
+    source = sys.argv[2] if len(sys.argv) > 2 else "us_election"
+    main(model,
+         start_version=None,
+         end_version="X",
+         data_source=source,
+         labeled_data=None)

@@ -1,24 +1,26 @@
-"""
-Script to preprocess the kaggle titanic dataset.
-"""
+"""Script to preprocess the kaggle titanic dataset."""
+import pickle
+
 import pandas as pd
+
+import tools
 
 pd.set_option('display.width', 800)
 
 def main():
-    """
-    Preprocess the data.
-    """
+    """Preprocess the data."""
     # Load the raw data
     raw_data_df = load_raw_data(path_raw_data="data/kaggle/raw_data/data.csv")
-    # Study data
+    # Study the raw data
     study_data(raw_data_df)
     # Transform the data
     data_df = process(raw_data_df)
-    # Study transformed data
+    # Study the transformed data
     study_data(data_df)
+    # Format the data
+    labeled_data = format_data(data_df)
     # Store the data
-    store(data_df, path_preprocessed_data="data/kaggle/data.csv")
+    store(labeled_data, path_preprocessed_data="data/kaggle/data.csv")
 
 
 def load_raw_data(path_raw_data):
@@ -31,9 +33,7 @@ def load_raw_data(path_raw_data):
 
 
 def study_data(data_df):
-    """
-    Examine the data.
-    """
+    """Examine the data."""
     # Display shape
     print("- shape :\n{}\n".format(data_df.shape))
     # Display data dataframe (raws and columns)
@@ -65,9 +65,15 @@ def process(raw_data_df):
     return data_df
 
 
-def store(data_df, path_preprocessed_data):
+@tools.debug
+def format_data(data_df):
+    """Format the data.
+    """
+    labeled_data = [(list(row[1:-1]), row[-1]) for row in data_df.itertuples()]
+    return labeled_data
+
+
+def store(labeled_data, path_preprocessed_data):
     """Store the processed data."""
-    data_df.to_csv(
-        path_preprocessed_data,
-        index=False
-        )
+    with open(path_preprocessed_data, "wb") as handle:
+        pickle.dump(labeled_data, handle)

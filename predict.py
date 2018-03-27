@@ -1,21 +1,22 @@
 """Prediction script.
 """
+import sys
 import importlib
-
-import pandas as pd
 
 import tools
 
 
-# @tools.debug
-def main(inputs_data=None,
-         model_type=None,
-         model_version=None):
+@tools.debug
+def main(inputs_data,
+         model_type,
+         model_version):
     """Perform a prediction.
     Args:
-        inputs_data (DataFrame): dataset to predict.
+        inputs_data (list): dataset to predict.
         model_type (str): type of model to use for prediction.
         model_version (str): version of this type of model to use.
+    Return
+        (list): predictions.
     """
     # Init the model
     model = init_model(model_type)
@@ -24,33 +25,28 @@ def main(inputs_data=None,
     model.load_parameters(model_version)
 
     # Perform the prediction
-    outputs_data = model.predict(inputs_data)
-
-    # Return the table
-    return outputs_data
+    return model.predict(inputs_data)
 
 
 def init_model(model_type):
-    """Init the model.
+    """Instanciate an instance of the class of the given type of model.
     Args:
-        model_type (str): type of the model to use.
+        model_type (str): type of model to train.
     Return:
-        model (Object): initialised model instance.
+        model (Model): instance of Model.
     """
-    # Import the module
+    # Import model
     model_module = importlib.import_module("library.{}.model".format(model_type))
-
-    # Initialize an instance of the class
-    model = model_module.Model()
-
     # Return the instance
-    return model
+    return model_module.Model()
 
 
 if __name__ == '__main__':
-    INPUTS_DATA = pd.read_csv("data/us_election/data.csv").iloc[0:100, :-1]
-    for model in ["scikit_learn_sag", "diy"]:
-        main(inputs_data=INPUTS_DATA,
-             data_source=None,
-             model_type=model,
-             model_version="X")
+    model = sys.argv[1] if len(sys.argv) > 1 else "pure_python"
+    inputs_data = [
+        [18.0, 7.0, 4.0, 2.0, 6.0, 3.0, 61.0, 7.0, 24.0],
+        [0.0, 7.0, 6.0, 2.0, 6.0, 6.0, 41.0, 4.0, 24.0]
+    ]
+    main(inputs_data,
+         model_type=model,
+         model_version="X")

@@ -1,5 +1,4 @@
-"""
-Script to preprocess the diabete dataset
+"""Script to preprocess the diabete dataset.
 
 source: https://archive.ics.uci.edu/ml/machine-learning-databases/pima-indians-diabetes/pima-indians-diabetes.names
 
@@ -16,7 +15,11 @@ For Each Attribute: (all numeric-valued)
 
 768 rows after removing wrong lines
 """
+import pickle
+
 import pandas as pd
+
+import tools
 
 pd.set_option('display.width', 800)
 
@@ -33,8 +36,10 @@ def main():
     data_df = process(raw_data_df)
     # Study transformed data
     study_data(data_df)
+    # Format the data
+    labeled_data = format_data(data_df)
     # Store the data
-    store(data_df, path_preprocessed_data="data/diabete/data.csv")
+    store(labeled_data, path_preprocessed_data="data/diabete/data.pkl")
 
 
 def load_raw_data(path_raw_data):
@@ -74,9 +79,15 @@ def process(raw_data_df):
     return data_df
 
 
-def store(data_df, path_preprocessed_data):
+@tools.debug
+def format_data(data_df):
+    """Format the data.
+    """
+    labeled_data = [(list(row[1:-1]), row[-1]) for row in data_df.itertuples()]
+    return labeled_data
+
+
+def store(labeled_data, path_preprocessed_data):
     """Store the processed data."""
-    data_df.to_csv(
-        path_preprocessed_data,
-        index=False
-        )
+    with open(path_preprocessed_data, "wb") as handle:
+        pickle.dump(labeled_data, handle)

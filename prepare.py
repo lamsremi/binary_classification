@@ -1,20 +1,22 @@
-"""Prepare data script.
+"""Control the preprocessing for each of the dataset.
 """
+import sys
 import importlib
 
 
-def main(data_source):
-    """Prepare the data from the data folder.
+def main(source):
+    """Prepare the data to the defined proper format.
     Args:
-        data_source (str): source of the data to use.
+        source (str): name of the dataset to use.
     """
-    # Import
-    preprocess_module = importlib.import_module("data.{}.preprocess".format(data_source))
-
-    # Preprocess the data
+    # Import the module related to the given data source
+    preprocess_module = importlib.import_module("data.{}.preprocess".format(source))
+    # Trigger the proprocessing.
     preprocess_module.main()
 
 
 if __name__ == '__main__':
-    for source in ["diabete", "kaggle", "us_election"]:
-        main(data_source=source)
+    # Retrieve the name of the data source from the terminal
+    source = sys.argv[1] if len(sys.argv) > 1 else "us_election"
+    # Perform the preprocessing
+    main(source)

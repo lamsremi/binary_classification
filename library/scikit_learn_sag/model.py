@@ -1,14 +1,9 @@
-"""
-Scikit_learn based implementation of logistic regression.
-
-Description of the module.
+"""Scikit_learn based implementation of logistic regression.
 """
 import sys
 import os
 import pickle
 
-import numpy as np
-import pandas as pd
 from sklearn.linear_model import LogisticRegression
 
 
@@ -27,52 +22,28 @@ class Model():
         Return
             prediction_df (DataFrame): table of prediction.
         """
-        # Set prediction table
-        prediction_df = pd.DataFrame()
+        # Return the prediction list
+        # return [self._predict_instance(row) for row in inputs_data]
+        return list(self._model.predict(inputs_data))
 
-        # Iterate
-        for row in inputs_data.itertuples():
-            prediction_df.loc[row[0], "prediction"] = self.predict_record(row)
 
-        # Return the prediction table
-        return prediction_df
-
-    def predict_record(self, row):
-        """Predict one record.
-        Args:
-            row (Pandas Object Row): input of one record.
-        Return:
-            prediction (float): prediction.
-        """
-        # Format and reshape for single sample
-        x_array = np.array([value for value in row[1:]]).reshape(1, -1)
-        # Compute
-        y_array = self._model.predict(x_array)
-        # Return prediction
-        return y_array
-
-    def fit(self, train_data, alpha, epochs):
+    def fit(self, labeled_data, alpha, epochs):
         """Fit the model.
         Args:
-            train_data (DataFrame): labeled dataset for fitting.
+            labeled_data (list): labeled dataset for fitting.
+            [
+                ([ 0.0, 6.0, 6.0, 2.0], 1.0)
+                ([ 8.0, 7.0, 4.0, 2.0], 1.0)
+            ]
         Note:
             * Scikit-learn framework:
                 Input: array-like, shape = [n_samples, n_features]
                 x_array = [
-                    [
-                        X_11,
-                        X_12
-                    ],
-                    [
-                        X_21,
-                        X_22
-                    ]
+                    [X_11, X_12],
+                    [X_21, X_22]
                 ]
                 Output: array-like
-                y_array = [
-                    y_1,
-                    y_2
-                ]
+                y_array = [y_1, y_2]
         """
         # If no verison is given
         if self._model is None:
@@ -91,9 +62,11 @@ class Model():
                                              verbose=1,
                                              warm_start=False,
                                              n_jobs=1)
-
-        x_array, y_array = self.format_data(train_data)
-        self._model.fit(x_array, y_array)
+        # Extract input and labels
+        x_arrays = [instance[0] for instance in labeled_data]
+        y_arrays = [instance[1] for instance in labeled_data]
+        # Fit
+        self._model.fit(x_arrays, y_arrays)
 
     def load_parameters(self, model_version):
         """Load the parameters of the model.
@@ -136,18 +109,3 @@ class Model():
         # Store the model.
         with open(folder_path + "/" + "model.sav", "wb") as handle:
             pickle.dump(self._model, handle)
-
-
-    @staticmethod
-    # @tools.debug
-    def format_data(train_data):
-        """Transform the data in the proper format.
-
-        So it can be used by the method predict of scikit learn.
-
-        Args:
-            train_data (DataFrame): training dataset.
-        """
-        x_array = np.array(train_data.iloc[:, :-1])
-        y_array = np.array(train_data.iloc[:, -1])
-        return x_array, y_array

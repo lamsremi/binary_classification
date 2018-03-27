@@ -83,14 +83,6 @@ Then install all the requirements :
 $ pip install -r requirements.txt
 ```
 
-## Test
-
-To test if all the functionnalities are working :
-
-```
-$ python -m unittest discover -s unittest
-```
-
 ## Use
 
 For training using a file :
